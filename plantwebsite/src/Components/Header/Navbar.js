@@ -1,47 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "remixicon/fonts/remixicon.css";
-import LeaftImage from "../../assets/img/leaf-1.png"
-import LeaftImage2 from "../../assets/img/leaf-2.png"
+import LeaftImage from "../../assets/img/leaf-1.png";
+import LeaftImage2 from "../../assets/img/leaf-2.png";
+
 function Navbar() {
-    return (
-        <header id="Navbar" class="bg-green-950 fixed w-full top-0 left-0 z-50">
-            <nav class="container flex justify-between h-16 sm:h-20">
-                <div class="font-Lobster sm:text-2xl">IndorPlants.</div>
-                <div id="nav-menu" class="absolute top-0 left-[-100%] min-h-[80vh] w-full 
-                bg-green-950/80 backdrop-blur-sm flex items-center justify-center duration-300
-                overflow-hidden
-                ">
-                    <ul class="flex flex-col items-center gap-8">
-                        <li>
-                            <a href="#Home" className="nav-link">Home</a>
-                        </li>
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
 
-                        <li>
-                            <a href="#About" className="nav-link">About</a>
-                        </li>
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const handleLinkClick = () => setMenuOpen(false);
 
-                        <li>
-                            <a href="#Populer" className="nav-link">Populer</a>
-                        </li>
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolling(window.scrollY >= 50);
+    };
 
-                        <li>
-                            <a href="#Review" className="nav-link">Review</a>
-                        </li>
-                    </ul>
-                    <div class="absolute bottom-0 -right-10 opacity-90">
-                        <img src={LeaftImage} alt="img1"  class="w-32"></img>
-                    </div>
+    window.addEventListener("scroll", handleScroll);
 
-                    <div class="absolute -top-5 -left-5 rotate-90 opacity-90">
-                        <img src={LeaftImage2} alt="img1" class="w-32"></img>
-                    </div>
-                    <div>
-                        <i class="ri-menu-4-line"></i>
-                    </div>
-                </div>
-            </nav>
-        </header>
-    );
+    // Clean up
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <header
+      id="Navbar"
+      className={`bg-green-950 fixed w-full top-0 left-0 z-50 duration-300 ${
+        scrolling ? "border-b border-yellow-500" : ""
+      }`}
+    >
+      <nav className="container flex justify-between h-16 sm:h-20">
+        <div className="font-Lobster sm:text-2xl">IndorPlants.</div>
+
+        <div
+          id="nav-menu"
+          className={`absolute top-0 ${
+            menuOpen ? "left-0" : "-left-full"
+          } min-h-[80vh] w-full bg-green-950/80 backdrop-blur-sm flex flex-col items-center justify-center gap-8 duration-300 lg:static lg:min-h-fit lg:bg-transparent lg:w-auto`}
+        >
+          <ul className="flex flex-col items-center gap-8 lg:flex-row">
+            <li>
+              <a href="#Home" className="nav-link" onClick={handleLinkClick}>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#About" className="nav-link" onClick={handleLinkClick}>
+                About
+              </a>
+            </li>
+            <li>
+              <a href="#Populer" className="nav-link" onClick={handleLinkClick}>
+                Populer
+              </a>
+            </li>
+            <li>
+              <a href="#Review" className="nav-link" onClick={handleLinkClick}>
+                Review
+              </a>
+            </li>
+          </ul>
+
+          <div className="absolute bottom-0 -right-2 opacity-90 lg:hidden">
+            <img src={LeaftImage} alt="img1" className="w-32" />
+          </div>
+
+          <div className="absolute -top-5 -left-5 rotate-90 opacity-90 lg:hidden">
+            <img src={LeaftImage2} alt="img1" className="w-32" />
+          </div>
+        </div>
+
+        <div
+          id="hamburger"
+          className="text-2xl sm:text-3xl cursor-pointer z-50 lg:hidden"
+          onClick={toggleMenu}
+        >
+          <i
+            className={
+              menuOpen ? "ri-close-large-line" : "ri-menu-4-line"
+            }
+          ></i>
+        </div>
+      </nav>
+    </header>
+  );
 }
 
 export default Navbar;
